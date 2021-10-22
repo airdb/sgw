@@ -65,9 +65,9 @@ func (m *Middleware) Validate() error {
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
 	cip, _, _ := net.SplitHostPort(r.RemoteAddr)
 
-	if r.URL.RequestURI() == "/ipip" {
-		ipInfo := waf.GetIPInfo(cip)
-		fmt.Print(ipInfo)
+	if r.URL.Path == "/ipip" {
+		ip := r.URL.Query().Get("ip")
+		ipInfo := waf.GetIPInfo(ip)
 		if ipInfo == nil {
 			w.Write([]byte("ip info is null"))
 			return next.ServeHTTP(w, r)
