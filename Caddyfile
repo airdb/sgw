@@ -1,0 +1,34 @@
+{
+	debug
+	order waf first
+}
+
+http://localhost:80 {
+
+    log {
+       level DEBUG
+       output stderr
+    }
+
+    respond /healthz "Im healthy!" 200
+}
+
+http://localhost {
+    #proxy / gogs:3000 {
+    #    header_upstream Host {host}
+    #    header_upstream X-Real-IP {remote}
+    #    header_upstream X-Forwarded-For {remote}
+    #    header_upstream X-Forwarded-Proto {scheme}
+    #}
+
+    #log /tmp/caddy.log
+    #root * /tmp/
+    #file_server browse
+
+    #tls /tmp/test/ssl.chain.crt /tmp/test/server.key
+    waf stdout
+}
+
+#https://localhost {
+#    tls /tmp/test/ssl.chain.crt /tmp/test/server.key
+#}
