@@ -1,5 +1,5 @@
 {
-	debug
+	# debug #access debug log
 	order waf first
 }
 
@@ -11,9 +11,19 @@ http://localhost:80 {
     }
 
     respond /healthz "Im healthy!" 200
+    respond /ok "Im healthy!" 200
+
+    waf stdout
+        # header_upstream Host {host}
+        # header_upstream X-Real-IP {remote}
+        # header_upstream X-Forwarded-For {remote}
+        # header_upstream X-Forwarded-Proto {scheme}
+    reverse_proxy / {
+        to http://bbhj.airdb.host:8888
+    }
 }
 
-http://localhost {
+https://localhost {
     #proxy / gogs:3000 {
     #    header_upstream Host {host}
     #    header_upstream X-Real-IP {remote}
@@ -25,8 +35,11 @@ http://localhost {
     #root * /tmp/
     #file_server browse
 
-    #tls /tmp/test/ssl.chain.crt /tmp/test/server.key
+    tls /tmp/test/ssl.chain.crt /tmp/test/server.key
     waf stdout
+    reverse_proxy / {
+     to http://bbhj.airdb.host:8888
+    }
 }
 
 #https://localhost {

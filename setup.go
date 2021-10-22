@@ -1,6 +1,7 @@
 package caddywaf
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -13,6 +14,7 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
+	"go.uber.org/zap"
 )
 
 func init() {
@@ -61,14 +63,30 @@ func (m *Middleware) Validate() error {
 
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-	// m.w.Write([]byte(r.RemoteAddr))
 	cip, _, _ := net.SplitHostPort(r.RemoteAddr)
+
+	if r.URL.RequestURI() == "/ipip" {
+		ipInfo := waf.GetIPInfo(cip)
+		fmt.Print(ipInfo)
+		if ipInfo == nil {
+			w.Write([]byte("ip info is null"))
+			return next.ServeHTTP(w, r)
+		}
+
+		b, _ := json.Marshal(ipInfo)
+		w.Write(b)
+		// caddy.Log().Info("check ip", zap.ByteString("ipinfo", b))
+		return next.ServeHTTP(w, r)
+	}
+
+	// m.w.Write([]byte(r.RemoteAddr))
 	check := waf.CheckIP(cip)
 	if check {
 		w.Write([]byte("server error 500\n"))
 		return errors.New("500")
 	}
 
+	caddy.Log().Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", check))
 	// w.Write([]byte("waf check pass\n"))
 
 	return next.ServeHTTP(w, r)
