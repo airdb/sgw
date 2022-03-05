@@ -3,7 +3,7 @@
 	order waf first
 }
 
-http://localhost:80 {
+http://aid.run:8888 {
 
     log {
        level DEBUG
@@ -34,30 +34,7 @@ http://127.0.0.1:8000 {
     respond /hello "Im healthy!" 200
 }
 
-http://127.0.0.1:8080 {
+http://aid.run:8080 {
     root * /tmp/
     file_server browse
 }
-
-#https://localhost {
-    #proxy / gogs:3000 {
-    #    header_upstream Host {host}
-    #    header_upstream X-Real-IP {remote}
-    #    header_upstream X-Forwarded-For {remote}
-    #    header_upstream X-Forwarded-Proto {scheme}
-    #}
-
-    #log /tmp/caddy.log
-    #root * /tmp/
-    #file_server browse
-
-    # tls /tmp/test/ssl.chain.crt /tmp/test/server.key
-#    waf stdout
-#    reverse_proxy / {
-#     to http://bbhj.airdb.host:8888
-#    }
-#}
-
-#https://localhost {
-#    tls /tmp/test/ssl.chain.crt /tmp/test/server.key
-#}

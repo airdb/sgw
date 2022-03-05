@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/caddyserver/caddy/v2 v2.4.5
 	github.com/ipipdotnet/ipdb-go v1.3.1
+	go.uber.org/zap v1.19.0
 )
 
 require (
@@ -81,7 +82,6 @@ require (
 	go.step.sm/linkedca v0.0.0-20210611183751-27424aae8d25 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.19.0 // indirect
 	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e // indirect
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
