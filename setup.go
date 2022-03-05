@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/airdb/caddywaf/waf/checker"
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
@@ -20,7 +21,12 @@ func init() {
 	caddy.RegisterModule(Middleware{})
 	httpcaddyfile.RegisterHandlerDirective("waf", parseCaddyfile)
 
+	// init log.
 	log = caddy.Log().Named(ModuleName)
+
+	// init ip info.
+
+	checker.NewIPIP()
 }
 
 // Middleware implements an HTTP handler that writes the
@@ -91,8 +97,9 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 		}
 
 	*/
+	check := checker.IPIP.CheckIP(cip)
 	log.Info("check ip", zap.String("ua", r.Header.Get("user-agent")))
-	log.Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", false), zap.String("ip", r.RequestURI))
+	log.Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
 	// w.Write([]byte("waf check pass\n"))
 
 	return next.ServeHTTP(w, r)

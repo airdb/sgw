@@ -18,6 +18,21 @@ const (
 	IPNULL = ""
 )
 
+type Ipip struct {
+	DB *ipdb.City
+}
+
+var IPIP Ipip
+
+func NewIPIP() {
+	var err error
+
+	IPIP.DB, err = ipdb.NewCity("ipv4_en.ipdb")
+	if err != nil {
+		panic(err)
+	}
+}
+
 func IsIPv6(str string) bool {
 	ip := net.ParseIP(str)
 	return ip != nil && strings.Contains(str, ":")
@@ -35,6 +50,21 @@ func CheckIP(ip string) bool {
 	}
 
 	dbmap, _ := db.FindMap(ip, IPIPEN)
+	idc := dbmap["idc"]
+
+	if idc == IPIDC || idc == IPVPN {
+		return true
+	}
+
+	return false
+}
+
+func (ipip Ipip) CheckIP(ip string) bool {
+	if IsIPv6(ip) {
+		return false
+	}
+
+	dbmap, _ := ipip.DB.FindMap(ip, IPIPEN)
 	idc := dbmap["idc"]
 
 	if idc == IPIDC || idc == IPVPN {
