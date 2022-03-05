@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/airdb/caddywaf/waf"
+	"github.com/airdb/caddywaf/waf/checker"
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
@@ -67,7 +67,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
 	if r.URL.Path == "/ipip" {
 		ip := r.URL.Query().Get("ip")
-		ipInfo := waf.GetIPInfo(ip)
+		ipInfo := checker.GetIPInfo(ip)
 		if ipInfo == nil {
 			w.Write([]byte("ip info is null"))
 			return next.ServeHTTP(w, r)
@@ -80,7 +80,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 	}
 
 	// m.w.Write([]byte(r.RemoteAddr))
-	check := waf.CheckIP(cip)
+	check := checker.CheckIP(cip)
 	if check {
 		w.Write([]byte("server error 500\n"))
 		return errors.New("500")

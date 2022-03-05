@@ -1,4 +1,4 @@
-package waf
+package checker
 
 import (
 	"log"

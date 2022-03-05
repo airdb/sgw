@@ -7,7 +7,8 @@ http://localhost:80 {
 
     log {
        level DEBUG
-       output stderr
+       # output stderr
+       output file /tmp/caddywaf.log
     }
 
     respond /healthz "Im healthy!" 200
@@ -18,12 +19,27 @@ http://localhost:80 {
         # header_upstream X-Real-IP {remote}
         # header_upstream X-Forwarded-For {remote}
         # header_upstream X-Forwarded-Proto {scheme}
-    reverse_proxy / {
-        to http://bbhj.airdb.host:8888
-    }
+    #reverse_proxy / {
+    #    to http://sg.airdb.host
+    #}
+
+     reverse_proxy / {
+        to http://127.0.0.1:8000
+    } 
+
 }
 
-https://localhost {
+http://127.0.0.1:8000 {
+    respond / "Im healthy!" 200
+    respond /hello "Im healthy!" 200
+}
+
+http://127.0.0.1:8080 {
+    root * /tmp/
+    file_server browse
+}
+
+#https://localhost {
     #proxy / gogs:3000 {
     #    header_upstream Host {host}
     #    header_upstream X-Real-IP {remote}
@@ -35,12 +51,12 @@ https://localhost {
     #root * /tmp/
     #file_server browse
 
-    tls /tmp/test/ssl.chain.crt /tmp/test/server.key
-    waf stdout
-    reverse_proxy / {
-     to http://bbhj.airdb.host:8888
-    }
-}
+    # tls /tmp/test/ssl.chain.crt /tmp/test/server.key
+#    waf stdout
+#    reverse_proxy / {
+#     to http://bbhj.airdb.host:8888
+#    }
+#}
 
 #https://localhost {
 #    tls /tmp/test/ssl.chain.crt /tmp/test/server.key
