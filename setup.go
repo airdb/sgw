@@ -1,6 +1,7 @@
 package caddywaf
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -91,15 +92,19 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
 		// m.w.Write([]byte(r.RemoteAddr))
 		check := checker.CheckIP(cip)
-		if check {
-			w.Write([]byte("server error 500\n"))
-			return errors.New("500")
-		}
 
 	*/
 	check := checker.IPIP.CheckIP(cip)
 	log.Info("check ip", zap.String("ua", r.Header.Get("user-agent")))
 	log.Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
+
+	if check {
+		if check {
+			w.Write([]byte("server error 500\n"))
+			log.Info("blocked by idc ip", zap.String("ip", cip), zap.String("uri", r.RequestURI))
+			return errors.New("500")
+		}
+	}
 	// w.Write([]byte("waf check pass\n"))
 
 	return next.ServeHTTP(w, r)
