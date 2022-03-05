@@ -85,6 +85,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 		}
 
 	*/
+	caddy.Log().Info("check ip", zap.String("ua", r.Header.Get("user-agent")))
 	caddy.Log().Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", false))
 	// w.Write([]byte("waf check pass\n"))
 
