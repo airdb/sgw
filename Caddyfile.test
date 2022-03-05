@@ -1,0 +1,34 @@
+{
+	# debug #access debug log
+	order waf first
+}
+
+
+http://127.0.0.1:80 {
+    log {
+       level DEBUG
+       #output stderr
+       output file /tmp/caddywaf.log
+    }
+
+    respond /healthz "Im healthy!" 200
+    respond /ok "Im healthy!" 200
+
+    waf stdout
+    reverse_proxy  http://127.0.0.1:8080
+
+    #reverse_proxy / {
+    #    to http://127.0.0.1:8080
+    #} 
+}
+
+http://127.0.0.1:8000 {
+    respond / "Im healthy!" 200
+
+    respond /hello "Im healthy!" 200
+}
+
+http://127.0.0.1:8080 {
+    root * /tmp/
+    file_server browse
+}

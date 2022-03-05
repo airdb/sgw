@@ -3,35 +3,19 @@
 	order waf first
 }
 
-http://aid.run:8888 {
-
+http://bbs.baobeihuijia.com:8888{
     log {
-       level DEBUG
-       # output stderr
-       output file /tmp/caddywaf.log
-    }
-
-    respond /healthz "Im healthy!" 200
-    respond /ok "Im healthy!" 200
-
-    waf stdout
-        # header_upstream Host {host}
-        # header_upstream X-Real-IP {remote}
-        # header_upstream X-Forwarded-For {remote}
-        # header_upstream X-Forwarded-Proto {scheme}
-    #reverse_proxy / {
-    #    to http://sg.airdb.host
-    #}
-
-     reverse_proxy / {
-        to http://127.0.0.1:8000
-    } 
-
-}
-
-http://127.0.0.1:8000 {
-    respond / "Im healthy!" 200
-    respond /hello "Im healthy!" 200
+        # level DEBUG
+        # output stderr
+        output file /tmp/caddywaf.log {
+           roll_size 500mb
+           roll_keep 10
+           roll_keep_for 120h
+         }
+     }
+ 
+     waf stdout
+     reverse_proxy  http://115.159.93.223:8888
 }
 
 http://aid.run:8080 {

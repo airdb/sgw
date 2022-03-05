@@ -3,5 +3,6 @@ dev:
 
 run:
 	 xcaddy run -watch
+
 build:
-	 xcaddy build
+	 xcaddy build --with github.com/airdb/caddywaf
