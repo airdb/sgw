@@ -3,7 +3,7 @@
 	order waf first
 }
 
-http://bbs.baobeihuijia.com:8888{
+http://bbs.baobeihuijia.com:1111{
     log {
         # level DEBUG
         # output stderr

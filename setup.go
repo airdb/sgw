@@ -1,15 +1,12 @@
 package caddywaf
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net"
 	"net/http"
 	"os"
 
-	"github.com/airdb/caddywaf/waf/checker"
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
@@ -65,28 +62,30 @@ func (m *Middleware) Validate() error {
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
 	cip, _, _ := net.SplitHostPort(r.RemoteAddr)
 
-	if r.URL.Path == "/ipip" {
-		ip := r.URL.Query().Get("ip")
-		ipInfo := checker.GetIPInfo(ip)
-		if ipInfo == nil {
-			w.Write([]byte("ip info is null"))
+	/*
+		if r.URL.Path == "/ipip" {
+			ip := r.URL.Query().Get("ip")
+			ipInfo := checker.GetIPInfo(ip)
+			if ipInfo == nil {
+				w.Write([]byte("ip info is null"))
+				return next.ServeHTTP(w, r)
+			}
+
+			b, _ := json.Marshal(ipInfo)
+			w.Write(b)
+			// caddy.Log().Info("check ip", zap.ByteString("ipinfo", b))
 			return next.ServeHTTP(w, r)
 		}
 
-		b, _ := json.Marshal(ipInfo)
-		w.Write(b)
-		// caddy.Log().Info("check ip", zap.ByteString("ipinfo", b))
-		return next.ServeHTTP(w, r)
-	}
+		// m.w.Write([]byte(r.RemoteAddr))
+		check := checker.CheckIP(cip)
+		if check {
+			w.Write([]byte("server error 500\n"))
+			return errors.New("500")
+		}
 
-	// m.w.Write([]byte(r.RemoteAddr))
-	check := checker.CheckIP(cip)
-	if check {
-		w.Write([]byte("server error 500\n"))
-		return errors.New("500")
-	}
-
-	caddy.Log().Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", check))
+	*/
+	caddy.Log().Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", false))
 	// w.Write([]byte("waf check pass\n"))
 
 	return next.ServeHTTP(w, r)
