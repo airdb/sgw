@@ -14,9 +14,13 @@ import (
 	"go.uber.org/zap"
 )
 
+var log *zap.Logger
+
 func init() {
 	caddy.RegisterModule(Middleware{})
 	httpcaddyfile.RegisterHandlerDirective("waf", parseCaddyfile)
+
+	log = caddy.Log().Named(ModuleName)
 }
 
 // Middleware implements an HTTP handler that writes the
@@ -28,6 +32,8 @@ type Middleware struct {
 
 	w io.Writer
 }
+
+const ModuleName = "caddywaf"
 
 // CaddyModule returns the Caddy module information.
 func (Middleware) CaddyModule() caddy.ModuleInfo {
@@ -85,8 +91,8 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 		}
 
 	*/
-	caddy.Log().Info("check ip", zap.String("ua", r.Header.Get("user-agent")))
-	caddy.Log().Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", false))
+	log.Info("check ip", zap.String("ua", r.Header.Get("user-agent")))
+	log.Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", false), zap.String("ip", r.RequestURI))
 	// w.Write([]byte("waf check pass\n"))
 
 	return next.ServeHTTP(w, r)
