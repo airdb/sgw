@@ -7,8 +7,8 @@
 http://127.0.0.1:80 {
     log {
        level DEBUG
-       #output stderr
-       output file /tmp/caddywaf.log
+       output stderr
+       #output file /tmp/caddywaf.log
     }
 
     respond /healthz "Im healthy!" 200

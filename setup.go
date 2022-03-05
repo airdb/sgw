@@ -95,7 +95,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
 	*/
 	check := checker.IPIP.CheckIP(cip)
-	log.Info("check ip", zap.String("ua", r.Header.Get("user-agent")))
+	log.Info("check ip", zap.String("Sec-Ch-Ua-Platform", r.Header.Get("Sec-Ch-Ua-Platform")), zap.String("ua", r.Header.Get("user-agent")))
 	log.Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
 
 	if check {
