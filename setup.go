@@ -75,27 +75,9 @@ func (m *Middleware) Validate() error {
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
 	cip, _, _ := net.SplitHostPort(r.RemoteAddr)
 
-	/*
-		if r.URL.Path == "/ipip" {
-			ip := r.URL.Query().Get("ip")
-			ipInfo := checker.GetIPInfo(ip)
-			if ipInfo == nil {
-				w.Write([]byte("ip info is null"))
-				return next.ServeHTTP(w, r)
-			}
-
-			b, _ := json.Marshal(ipInfo)
-			w.Write(b)
-			// caddy.Log().Info("check ip", zap.ByteString("ipinfo", b))
-			return next.ServeHTTP(w, r)
-		}
-
-		// m.w.Write([]byte(r.RemoteAddr))
-		check := checker.CheckIP(cip)
-
-	*/
 	check := checker.IPIP.CheckIP(cip)
-	log.Info("check ip", zap.String("Sec-Ch-Ua-Platform", r.Header.Get("Sec-Ch-Ua-Platform")), zap.String("ua", r.Header.Get("user-agent")))
+	ua := r.Header.Get("user-agent")
+	log.Info("check ip", zap.String("Sec-Ch-Ua-Platform", r.Header.Get("Sec-Ch-Ua-Platform")), zap.String("ua", ua))
 	log.Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
 
 	if check {
@@ -104,6 +86,13 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 			log.Info("blocked by idc ip", zap.String("ip", cip), zap.String("uri", r.RequestURI))
 			return errors.New("500")
 		}
+	}
+
+	check = checker.CheckUserAgent(ua)
+	if check {
+		w.Write([]byte("server error 500\n"))
+		log.Info("blocked by ua", zap.String("ua", ua), zap.String("uri", r.RequestURI))
+		return errors.New("500")
 	}
 	// w.Write([]byte("waf check pass\n"))
 
