@@ -16,7 +16,11 @@ http://bbs.baobeihuijia.com:1111 {
     log {
         output file /tmp/caddywaf.log
     }
-    
+
+    header /* {
+        -Server
+    }
+
      waf stdout
      reverse_proxy  http://115.159.93.223:8888
 }
