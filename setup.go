@@ -79,7 +79,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 	actionMsg := ""
 	ua := r.Header.Get("user-agent")
 
-	actionMsg = checker.ActionWatch
+	actionMsg = checker.ActionWatchMsg
 	log.Debug(actionMsg, zap.String("Sec-Ch-Ua-Platform", r.Header.Get("Sec-Ch-Ua-Platform")), zap.String("ua", ua))
 	log.Debug(actionMsg, zap.String("cip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
 

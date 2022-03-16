@@ -12,9 +12,9 @@ var CreditScore uint
 
 // Block Message.
 const (
-	BlockByIP    = "block by IP"
-	BlockByIPIDC = "block by IP IDC"
-	BlockByUA    = "block by UA"
-	BlockByURI   = "block by URI"
-	ActionWatch  = "watch"
+	BlockByIP      = "block by IP"
+	BlockByIPIDC   = "block by IP IDC"
+	BlockByUA      = "block by UA"
+	BlockByURI     = "block by URI"
+	ActionWatchMsg = "watch"
 )
