@@ -1,15 +1,20 @@
 {
 	# debug #access debug log
 	order waf first
+
+    log {
+        level DEBUG
+        format json
+        output file /tmp/caddywaf.log {
+			roll_size 1gb
+		    roll_keep 5
+		    roll_keep_for 720h
+        }
+    }
 }
 
 
-http://127.0.0.1:80 {
-    log {
-       level DEBUG
-       output stderr
-       #output file /tmp/caddywaf.log
-    }
+http://127.0.0.1:8001 {
 
     respond /healthz "Im healthy!" 200
     respond /ok "Im healthy!" 200
@@ -19,10 +24,13 @@ http://127.0.0.1:80 {
 
     #reverse_proxy / {
     #    to http://127.0.0.1:8080
-    #} 
+    #}
 }
 
 http://127.0.0.1:8000 {
+log {
+       output file /tmp/caddywaf.log
+}
     respond / "Im healthy!" 200
 
     respond /hello "Im healthy!" 200

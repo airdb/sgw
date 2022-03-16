@@ -1,9 +1,22 @@
 {
 	# debug #access debug log
 	order waf first
+    log {
+        level DEBUG
+        format json
+        output file /tmp/caddywaf.log {
+			roll_size 1gb
+		    roll_keep 5
+		    roll_keep_for 720h
+        }
+    }
 }
 
 http://bbs.baobeihuijia.com:1111 {
+    log {
+        output file /tmp/caddywaf.log
+    }
+    
      waf stdout
      reverse_proxy  http://115.159.93.223:8888
 }
