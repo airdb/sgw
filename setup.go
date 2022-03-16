@@ -76,14 +76,18 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 	cip, _, _ := net.SplitHostPort(r.RemoteAddr)
 
 	check := checker.IPIP.CheckIP(cip)
+	actionMsg := ""
 	ua := r.Header.Get("user-agent")
-	log.Info("check ip", zap.String("Sec-Ch-Ua-Platform", r.Header.Get("Sec-Ch-Ua-Platform")), zap.String("ua", ua))
-	log.Info("check ip", zap.String("ip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
+
+	actionMsg = checker.ActionWatch
+	log.Debug(actionMsg, zap.String("Sec-Ch-Ua-Platform", r.Header.Get("Sec-Ch-Ua-Platform")), zap.String("ua", ua))
+	log.Debug(actionMsg, zap.String("cip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
 
 	if check {
 		if check {
 			w.Write([]byte("server error 500\n"))
-			log.Info("blocked by idc ip", zap.String("ip", cip), zap.String("uri", r.RequestURI))
+			actionMsg = checker.BlockByIPIDC
+			log.Info(actionMsg, zap.String("ip", cip), zap.String("uri", r.RequestURI))
 			return errors.New("500")
 		}
 	}
@@ -91,7 +95,8 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 	check = checker.CheckUserAgent(ua)
 	if check {
 		w.Write([]byte("server error 500\n"))
-		log.Info("blocked by ua", zap.String("ua", ua), zap.String("uri", r.RequestURI))
+		actionMsg = checker.BlockByUA
+		log.Info(actionMsg, zap.String("ua", ua), zap.String("uri", r.RequestURI))
 		return errors.New("500")
 	}
 	// w.Write([]byte("waf check pass\n"))
