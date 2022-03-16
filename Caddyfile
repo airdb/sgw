@@ -10,6 +10,8 @@
 		    roll_keep_for 720h
         }
     }
+
+    auto_https off
 }
 
 http://bbs.baobeihuijia.com:1111 {
