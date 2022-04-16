@@ -1,17 +1,23 @@
 {
-	# debug #access debug log
-	order waf first
+    # debug #access debug log
+    order waf first
     log {
         level DEBUG
         format json
         output file /tmp/caddywaf.log {
-			roll_size 500MiB
-		    roll_keep 5
-		    roll_keep_for 720h
+            roll_size 500MiB
+            roll_keep 5
+            roll_keep_for 720h
         }
     }
 
-    auto_https off
+    #auto_https off
+
+    # Optional: set root folder for Caddyfile and Certificates
+    storage file_system {
+        root /srv/caddy
+    }
+    email tech@airdb.net
 }
 
 http://bbs.baobeihuijia.com:1111 {
@@ -27,6 +33,25 @@ http://bbs.baobeihuijia.com:1111 {
      reverse_proxy  http://115.159.93.223:8888
 }
 
+https://bbs.baobeihuijia.com {
+    log {
+        output file /tmp/caddywaf.log
+    }
+
+    header /* {
+        -Server
+    }
+
+     waf stdout
+     reverse_proxy  http://115.159.93.223:8888
+}
+
+https://airdb.net {
+    waf stdout
+    root * /srv/www
+    file_server browse
+}
+
 http://aid.run:8080 {
     #log {
     #    # level DEBUG
@@ -38,6 +63,6 @@ http://aid.run:8080 {
     #     }
     # }
 
-    root * /tmp/
+    root * /srv/www
     file_server browse
 }
