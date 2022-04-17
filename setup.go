@@ -73,6 +73,7 @@ func (m *Middleware) Validate() error {
 
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
+	w.Header().Add("X-Airdb-Server", "airdb-gateway")
 	cip, _, _ := net.SplitHostPort(r.RemoteAddr)
 
 	check := checker.IPIP.CheckIP(cip)
@@ -87,6 +88,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 		if check {
 			w.Write([]byte("server error 500\n"))
 			actionMsg = checker.BlockByIPIDC
+			w.Header().Add("X-Airdb-Action", actionMsg)
 			log.Info(actionMsg, zap.String("ip", cip), zap.String("uri", r.RequestURI))
 			return errors.New("500")
 		}
@@ -94,11 +96,16 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
 	check = checker.CheckUserAgent(ua)
 	if check {
-		w.Write([]byte("server error 500\n"))
 		actionMsg = checker.BlockByUA
+		w.Header().Add("X-Airdb-Action", actionMsg)
+		w.Write([]byte("server error 500\n"))
 		log.Info(actionMsg, zap.String("ua", ua), zap.String("uri", r.RequestURI))
 		return errors.New("500")
 	}
+
+	w.Header().Add("X-Airdb-Action", actionMsg)
+	w.Header().Add("X-Airdb-Uid", "1234567890")
+	w.Header().Add("X-Airdb-Rid", "BFC4CD12-265E-4305-941E-847DE6727D91")
 	// w.Write([]byte("waf check pass\n"))
 
 	return next.ServeHTTP(w, r)

@@ -1,5 +1,5 @@
 dev:
-	 ./caddy run -watch -config Caddyfile.test
+	 ./caddy run -watch -config Caddyfile.dev
 
 run:
 	 ./caddy run -watch
