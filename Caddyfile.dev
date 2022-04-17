@@ -27,6 +27,13 @@ http://127.0.0.1:8001 {
     #reverse_proxy / {
     #    to http://127.0.0.1:8080
     #}
+
+    respond /robots.txt 200 {
+        body "User-agent: *
+Disallow: /"
+        close
+    }
+
 }
 
 http://127.0.0.1:8000 {

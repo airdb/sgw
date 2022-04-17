@@ -1,3 +1,5 @@
+#import Caddyfile.d/*.conf
+
 {
     # debug #access debug log
     order waf first
@@ -43,14 +45,17 @@ https://bbs.baobeihuijia.com {
         -Server
     }
 
-    respond /robots.txt 200 {
-        body "User-agent: *
-Disallow: /"
-        close
+    @not_static {
+        not {
+            path /BingSiteAuth.xml /robots.txt
+            path /favicon.ico
+        }
     }
 
-     waf stdout
-     reverse_proxy  http://115.159.93.223:8888
+    waf stdout
+    reverse_proxy @not_static http://115.159.93.223:8888
+    root * /srv/www
+    file_server
 }
 
 https://airdb.net {
@@ -58,19 +63,6 @@ https://airdb.net {
         zstd
         gzip
     }
-
-    header /robots.txt {
-      User-agent *
-      Disallow /
-    }
-    
-    #respond /robots.txt 200 
-    respond /robots.txt 200 {
-        body "User-agent: *
-Disallow: /"
-        close
-    }
-
 
     header /* {
         -Server
@@ -80,10 +72,18 @@ Disallow: /"
         x-airdb-request-id: "8cd07f3a5ff98f2a78cfc366c13fb123eb8d29c1ca37c79df190425d5b9e424d"
     }
 
+
+    @not_static {
+        not {
+            path /BingSiteAuth.xml /robots.txt
+            path /favicon.ico
+        }
+    }
+
     #waf stdout
-    reverse_proxy  http://127.0.0.1:8000
-    #root * /srv/www
-    #file_server browse
+    reverse_proxy @not_static http://127.0.0.1:8000
+    root * /srv/www
+    file_server
 }
 
 #*.hello.airdb.net  {
@@ -95,6 +95,14 @@ Disallow: /"
 
 https://dev.airdb.net {
     encode gzip
+    @not_static {
+        not {
+            path /BingSiteAuth.xml /robots.txt
+            path /favicon.ico
+        }
+    }
 
-    reverse_proxy  http://127.0.0.1:7000
+    reverse_proxy @not_static http://127.0.0.1:7000
+    root * /srv/www
+    file_server
 }
