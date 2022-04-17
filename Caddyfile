@@ -18,6 +18,7 @@
         root /srv/caddy
     }
     email tech@airdb.net
+
 }
 
 http://bbs.baobeihuijia.com:1111 {
@@ -47,22 +48,16 @@ https://bbs.baobeihuijia.com {
 }
 
 https://airdb.net {
-    waf stdout
-    root * /srv/www
-    file_server browse
+    encode gzip
+
+    #waf stdout
+    reverse_proxy  http://127.0.0.1:8000
+    #root * /srv/www
+    #file_server browse
 }
 
-http://aid.run:8080 {
-    #log {
-    #    # level DEBUG
-    #    # output stderr
-    #    output file /tmp/caddywaf.log {
-    #       roll_size 500mb
-    #       roll_keep 10
-    #       roll_keep_for 120h
-    #     }
-    # }
+https://dev.airdb.net {
+    encode gzip
 
-    root * /srv/www
-    file_server browse
+    reverse_proxy  http://127.0.0.1:7000
 }
