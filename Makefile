@@ -1,4 +1,4 @@
-dev:
+dev: build
 	 ./caddy run -watch -config Caddyfile.dev
 
 run:
