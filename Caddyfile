@@ -43,18 +43,55 @@ https://bbs.baobeihuijia.com {
         -Server
     }
 
+    respond /robots.txt 200 {
+        body "User-agent: *
+Disallow: /"
+        close
+    }
+
      waf stdout
      reverse_proxy  http://115.159.93.223:8888
 }
 
 https://airdb.net {
-    encode gzip
+    encode {
+        zstd
+        gzip
+    }
+
+    header /robots.txt {
+      User-agent *
+      Disallow /
+    }
+    
+    #respond /robots.txt 200 
+    respond /robots.txt 200 {
+        body "User-agent: *
+Disallow: /"
+        close
+    }
+
+
+    header /* {
+        -Server
+        x-airdb-server: airdb-gateway
+        x-airdb-action: watch
+        x-airdb-uid: "1234567890"
+        x-airdb-request-id: "8cd07f3a5ff98f2a78cfc366c13fb123eb8d29c1ca37c79df190425d5b9e424d"
+    }
 
     #waf stdout
     reverse_proxy  http://127.0.0.1:8000
     #root * /srv/www
     #file_server browse
 }
+
+#*.hello.airdb.net  {
+#    tls {
+#        dns dnspod {env.DNSPOD_TOKEN}
+#        wildcard
+#    }
+#}
 
 https://dev.airdb.net {
     encode gzip
