@@ -1,108 +1,118 @@
 #import Caddyfile.d/*.conf
-
 {
-    # debug #access debug log
-    order waf first
-    log {
-        level DEBUG
-        format json
-        output file /tmp/caddywaf.log {
-            roll_size 500MiB
-            roll_keep 5
-            roll_keep_for 720h
-        }
-    }
+	# debug #access debug log
+	order waf first
+	log {
+		level DEBUG
+		format json
+		output file /tmp/caddywaf.log {
+			roll_size 500MiB
+			roll_keep 5
+			roll_keep_for 720h
+		}
+	}
 
-    #auto_https off
+	#auto_https off
 
-    # Optional: set root folder for Caddyfile and Certificates
-    storage file_system {
-        root /srv/caddy
-    }
-    email tech@airdb.net
-
+	# Optional: set root folder for Caddyfile and Certificates
+	storage file_system {
+		root /srv/caddy
+	}
+	email tech@airdb.net
 }
 
 http://bbs.baobeihuijia.com:1111 {
-    log {
-        output file /tmp/caddywaf.log
-    }
+	log {
+		output file /tmp/caddywaf.log
+	}
 
-    header /* {
-        -Server
-    }
+	header /* {
+		-Server
+	}
 
-     waf stdout
-     reverse_proxy  http://115.159.93.223:8888
+	waf stdout
+	reverse_proxy http://115.159.93.223:8888
 }
 
 https://bbs.baobeihuijia.com {
-    log {
-        output file /tmp/caddywaf.log
-    }
+	log {
+		output file /tmp/caddywaf.log
+	}
 
-    header /* {
-        -Server
-    }
+	header /* {
+		-Server
+	}
 
-    @not_static {
-        not {
-            path /BingSiteAuth.xml /robots.txt
-            path /favicon.ico
-        }
-    }
+	@not_static {
+		not {
+			path /BingSiteAuth.xml /robots.txt
+			path /favicon.ico
+		}
+	}
 
-    waf stdout
-    reverse_proxy @not_static http://115.159.93.223:8888
-    root * /srv/www
-    file_server
+	waf stdout
+	reverse_proxy @not_static http://115.159.93.223:8888
+	root * /srv/www
+	file_server
 }
 
 https://airdb.net {
-    encode {
-        zstd
-        gzip
-    }
+	encode {
+		#zstd
+		gzip
+	}
 
-    header /* {
-        -Server
-        x-airdb-server: airdb-gateway
-        x-airdb-action: watch
-        x-airdb-uid: "1234567890"
-        x-airdb-request-id: "8cd07f3a5ff98f2a78cfc366c13fb123eb8d29c1ca37c79df190425d5b9e424d"
-    }
+	header /* {
+		-Server
+		Access-Control-Allow-Origin *
+		Access-Control-Allow-Credentials true
+		Access-Control-Allow-Methods *
+		Access-Control-Allow-Headers *
+		#x-airdb-server: airdb-gateway
+		#x-airdb-action: watch
+		#x-airdb-uid: "1234567890"
+		#x-airdb-request-id: "8cd07f3a5ff98f2a78cfc366c13fb123eb8d29c1ca37c79df190425d5b9e424d"
+	}
 
+	@not_static {
+		not {
+			path /BingSiteAuth.xml /robots.txt
+			path /favicon.ico
+		}
+	}
 
-    @not_static {
-        not {
-            path /BingSiteAuth.xml /robots.txt
-            path /favicon.ico
-        }
-    }
-
-    #waf stdout
-    reverse_proxy @not_static http://127.0.0.1:8000
-    root * /srv/www
-    file_server
+	#waf stdout
+	reverse_proxy @not_static http://127.0.0.1:8000
+	root * /srv/www
+	file_server
 }
 
-#*.hello.airdb.net  {
-#    tls {
-#        dns dnspod {env.DNSPOD_TOKEN}
-#        wildcard
-#    }
-#}
+*.hello.airdb.net hello.airdb.net {
+	tls {
+		#dns dnspod {env.DNSPOD_TOKEN}
+		dns dnspod 307575,dec11869aee1bada71d4bac33f9b750c
+	}
+
+	@service host hello.airdb.net
+	reverse_proxy @service http://127.0.0.1:8000
+
+	@serviceA host a.hello.airdb.net
+	reverse_proxy @serviceA http://127.0.0.1:8000
+
+	@serviceB host b.hello.airdb.net
+	reverse_proxy @serviceB http://115.159.93.223:8888
+}
 
 https://dev.airdb.net {
-    encode gzip
-    @not_static {
-        not {
-            path /BingSiteAuth.xml /robots.txt
-            path /favicon.ico
-        }
-    }
+	encode gzip
+	@not_static {
+		not {
+			path /BingSiteAuth.xml /robots.txt
+			path /favicon.ico
+		}
+	}
 
-    reverse_proxy @not_static http://127.0.0.1:7000
-    root * /srv/www
-    file_server
+	reverse_proxy @not_static http://127.0.0.1:7000
+	root * /srv/www
+	file_server
 }
