@@ -1,6 +1,9 @@
 A Simple WAF Based on Caddy Server.
 
 
+## Documentation
+
+Documentation is hosted at https://github.com/airdb/caddywaf/wiki.
 # Decision Center
 This module is charge for the decision, will do action for each request.
 The action is in "allow", "block", and "watch".
