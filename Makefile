@@ -4,6 +4,8 @@ dev: build
 run:
 	 ./caddy run -watch
 
+fmt:
+	./caddy fmt -overwrite
 
 build:
 	#https://caddy.community/t/trying-to-build-caddy-from-source-to-test-2-5-0-beta-with-plugins/15393/2

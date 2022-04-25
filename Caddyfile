@@ -103,7 +103,7 @@ https://airdb.net {
 		Access-Control-Allow-Origin *
 		x-airdb-server: airdb-gateway
 		x-airdb-action: watch
-    }
+	}
 	@not_static {
 		not {
 			path /BingSiteAuth.xml /robots.txt
@@ -111,27 +111,39 @@ https://airdb.net {
 		}
 	}
 
-	handle /robots.txt {
-		root * /srv/www
-		file_server
+	@static {
+		path /BingSiteAuth.xml /robots.txt
+		path /favicon.ico
 	}
 
-	handle /favicon.ico {
-		root * /srv/www
-		file_server
-	}
+	#handle /robots.txt {
+	#	root * /srv/www
+	#	file_server
+	#}
+
+	#handle /favicon.ico {
+	#	root * /srv/www
+	#	file_server
+	#}
 	#root /robots.txt /srv/www
 	#file_server
 
+	handle @static {
+		root * /srv/www
+		file_server
+	}
+
 	# https://caddyserver.com/docs/caddyfile/directives/reverse_proxy
-	@service host dev.airdb.net
-	reverse_proxy @service http://127.0.0.1:7000
+	handle {
+		@service host dev.airdb.net
+		reverse_proxy @service http://127.0.0.1:7000
 
-	@serviceA host a.airdb.net
-	reverse_proxy @serviceA http://127.0.0.1:8000
+		@serviceA host a.airdb.net
+		reverse_proxy @serviceA http://127.0.0.1:8000
 
-	@serviceB host b.airdb.net
-	reverse_proxy @serviceB http://115.159.93.223:8888
+		@serviceB host b.airdb.net
+		reverse_proxy @serviceB http://115.159.93.223:8888
+	}
 
 	root * /srv/www
 	file_server
