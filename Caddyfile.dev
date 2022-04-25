@@ -1,5 +1,5 @@
 {
-	# debug #access debug log
+	debug #access debug log
 	order waf first
 
     log {
@@ -16,13 +16,13 @@
 }
 
 
-http://127.0.0.1:8001 {
+http://127.0.0.1:8080 {
 
     respond /healthz "Im healthy!" 200
     respond /ok "Im healthy!" 200
 
     waf stdout
-    reverse_proxy  http://127.0.0.1:8080
+    reverse_proxy  http://127.0.0.1:8001
 
     #reverse_proxy / {
     #    to http://127.0.0.1:8080
@@ -45,7 +45,7 @@ log {
     respond /hello "Im healthy!" 200
 }
 
-http://127.0.0.1:8080 {
+http://127.0.0.1:8001 {
     root * /tmp/
     file_server browse
 }

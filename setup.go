@@ -25,9 +25,9 @@ func init() {
 	// init log.
 	log = caddy.Log().Named(ModuleName)
 
+	args.IPVendor = "ipv4_en.ipdb"
 	// init ip info.
-
-	checker.NewIPIP()
+	checker.NewIPIP(args.IPVendor)
 }
 
 // Middleware implements an HTTP handler that writes the
@@ -35,10 +35,12 @@ func init() {
 type Middleware struct {
 	// The file or stream to write to. Can be "stdout"
 	// or "stderr".
-	Output string `json:"output,omitempty"`
-
-	w io.Writer
+	Output   string `json:"output,omitempty"`
+	IPVendor string `json:"ipvendor,omitempty"`
+	w        io.Writer
 }
+
+var args Middleware
 
 const ModuleName = "caddywaf"
 
@@ -114,18 +116,28 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 // UnmarshalCaddyfile implements caddyfile.Unmarshaler.
 func (m *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
-		if !d.Args(&m.Output) {
+		fmt.Print("xxxxxxx")
+		if d.NextArg() {
+			m.Output = d.Val()
+		}
+
+		if d.NextArg() {
 			return d.ArgErr()
 		}
+		/*
+			if !d.Args(&m.Output) {
+				return d.ArgErr()
+			}
+		*/
 	}
 	return nil
 }
 
 // parseCaddyfile unmarshals tokens from h into a new Middleware.
 func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) {
-	var m Middleware
-	err := m.UnmarshalCaddyfile(h.Dispenser)
-	return m, err
+	// var m Middleware
+	err := args.UnmarshalCaddyfile(h.Dispenser)
+	return args, err
 }
 
 // Interface guards

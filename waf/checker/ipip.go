@@ -24,10 +24,10 @@ type Ipip struct {
 
 var IPIP Ipip
 
-func NewIPIP() {
+func NewIPIP(ipVendor string) {
 	var err error
 
-	IPIP.DB, err = ipdb.NewCity("ipv4_en.ipdb")
+	IPIP.DB, err = ipdb.NewCity(ipVendor)
 	if err != nil {
 		panic(err)
 	}
