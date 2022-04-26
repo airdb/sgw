@@ -35,9 +35,11 @@ func init() {
 type Middleware struct {
 	// The file or stream to write to. Can be "stdout"
 	// or "stderr".
-	Output   string `json:"output,omitempty"`
-	IPVendor string `json:"ipvendor,omitempty"`
-	w        io.Writer
+	Output         string   `json:"output,omitempty"`
+	IPVendor       string   `json:"ipvendor,omitempty"`
+	Orders         []string `json:"orders"`
+	strategyOrders []string `json:"strategyOrders"`
+	w              io.Writer
 }
 
 var args Middleware
@@ -115,14 +117,28 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
 // UnmarshalCaddyfile implements caddyfile.Unmarshaler.
 func (m *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+	fmt.Println("a", d.Val())
 	for d.Next() {
-		fmt.Print("xxxxxxx")
-		if d.NextArg() {
-			m.Output = d.Val()
-		}
-
-		if d.NextArg() {
-			return d.ArgErr()
+		switch d.Val() {
+		case "waf":
+			if d.NextArg() {
+				m.Output = d.Val()
+			}
+		case "ipvendor":
+			// TODO: check value
+			m.IPVendor = d.Val()
+		case "orders":
+			vals := []string{}
+			for d.NextArg() {
+				vals = append(vals, d.Val())
+			}
+			m.Orders = vals
+		case "strategyOrders":
+			vals := []string{}
+			for d.NextArg() {
+				vals = append(vals, d.Val())
+			}
+			m.strategyOrders = vals
 		}
 		/*
 			if !d.Args(&m.Output) {
