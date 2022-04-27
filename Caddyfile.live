@@ -54,7 +54,11 @@ https://bbs.baobeihuijia.com {
 
 	waf {
 		output stdout
+		ipvendor "ipv4_en.ipdb"
+		orders wafModule1 wafModule2 wafModule3
+		strategyOrders strategy1 strategy2 strategy3
 	}
+
 	reverse_proxy @not_static http://115.159.93.223:8888
 	root * /srv/www
 	file_server
@@ -85,7 +89,13 @@ https://airdb.net {
 		}
 	}
 
-	#waf stdout
+	waf {
+		output stdout
+		ipvendor "ipv4_en.ipdb"
+		orders wafModule1 wafModule2 wafModule3
+		strategyOrders strategy1 strategy2 strategy3
+	}
+
 	reverse_proxy @not_static http://127.0.0.1:8000
 	root * /srv/www
 	file_server
