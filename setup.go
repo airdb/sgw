@@ -24,10 +24,6 @@ func init() {
 
 	// init log.
 	log = caddy.Log().Named(ModuleName)
-
-	args.IPVendor = "ipv4_en.ipdb"
-	// init ip info.
-	checker.NewIPIP(args.IPVendor)
 }
 
 // Middleware implements an HTTP handler that writes the
@@ -38,7 +34,7 @@ type Middleware struct {
 	Output         string   `json:"output,omitempty"`
 	IPVendor       string   `json:"ipvendor,omitempty"`
 	Orders         []string `json:"orders"`
-	strategyOrders []string `json:"strategyOrders"`
+	StrategyOrders []string `json:"strategy_orders"`
 	w              io.Writer
 }
 
@@ -69,6 +65,9 @@ func (m *Middleware) Provision(ctx caddy.Context) error {
 
 // Validate implements caddy.Validator.
 func (m *Middleware) Validate() error {
+	// init ip info.
+	checker.NewIPIP(args.IPVendor)
+
 	if m.w == nil {
 		return fmt.Errorf("no writer")
 	}
@@ -115,30 +114,28 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 	return next.ServeHTTP(w, r)
 }
 
-// UnmarshalCaddyfile implements caddyfile.Unmarshaler.
+// UnmarshalCaddyfile implements caddyfile.Unmarshaler, Syntax:
+//
+//     waf <name> [<option>]
+//
 func (m *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
-	fmt.Println("a", d.Val())
 	for d.Next() {
-		switch d.Val() {
-		case "waf":
-			if d.NextArg() {
-				m.Output = d.Val()
+		for nesting := d.Nesting(); d.NextBlock(nesting); {
+			switch d.Val() {
+			case "output":
+				if d.NextArg() {
+					m.Output = d.Val()
+				}
+			case "ipvendor":
+				// TODO: check value
+				if d.NextArg() {
+					m.IPVendor = d.Val()
+				}
+			case "orders":
+				m.Orders = d.RemainingArgs()
+			case "strategyOrders":
+				m.StrategyOrders = d.RemainingArgs()
 			}
-		case "ipvendor":
-			// TODO: check value
-			m.IPVendor = d.Val()
-		case "orders":
-			vals := []string{}
-			for d.NextArg() {
-				vals = append(vals, d.Val())
-			}
-			m.Orders = vals
-		case "strategyOrders":
-			vals := []string{}
-			for d.NextArg() {
-				vals = append(vals, d.Val())
-			}
-			m.strategyOrders = vals
 		}
 		/*
 			if !d.Args(&m.Output) {
@@ -146,6 +143,7 @@ func (m *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			}
 		*/
 	}
+
 	return nil
 }
 
@@ -153,7 +151,10 @@ func (m *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) {
 	// var m Middleware
 	err := args.UnmarshalCaddyfile(h.Dispenser)
-	return args, err
+	if err != nil {
+		return nil, err
+	}
+	return args, nil
 }
 
 // Interface guards

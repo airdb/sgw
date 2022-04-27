@@ -30,7 +30,9 @@ http://bbs.baobeihuijia.com:1111 {
 		-Server
 	}
 
-	waf stdout
+	waf {
+		output stdout
+	}
 	reverse_proxy http://115.159.93.223:8888
 }
 
@@ -50,7 +52,9 @@ https://bbs.baobeihuijia.com {
 		}
 	}
 
-	waf stdout
+	waf {
+		output stdout
+	}
 	reverse_proxy @not_static http://115.159.93.223:8888
 	root * /srv/www
 	file_server
