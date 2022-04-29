@@ -157,8 +157,11 @@ https://airdb.net {
 		@service host dev.airdb.net
 		reverse_proxy @service http://127.0.0.1:7000
 
-		@serviceA host a.airdb.net
-		reverse_proxy @serviceA http://127.0.0.1:8000
+		@serviceSSO host sso.airdb.net
+		reverse_proxy @serviceSSO http://127.0.0.1:8000
+
+		@serviceID host id.airdb.net
+		reverse_proxy @serviceID http://127.0.0.1:8000
 
 		@serviceB host b.airdb.net
 		reverse_proxy @serviceB http://115.159.93.223:8888
