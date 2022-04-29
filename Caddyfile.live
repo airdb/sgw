@@ -32,6 +32,9 @@ http://bbs.baobeihuijia.com:1111 {
 
 	waf {
 		output stdout
+		ipvendor "ipv4_en.ipdb"
+		orders wafModule1 wafModule2 wafModule3
+		strategyOrders strategy1 strategy2 strategy3
 	}
 	reverse_proxy http://115.159.93.223:8888
 }
@@ -72,6 +75,8 @@ https://airdb.net {
 
 	header /* {
 		-Server
+        X-content-type-tptions nosniff
+        X-frame-options DENY
 		Access-Control-Allow-Origin *
 		Access-Control-Allow-Credentials true
 		Access-Control-Allow-Methods *
