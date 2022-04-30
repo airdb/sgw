@@ -39,7 +39,11 @@ http://bbs.baobeihuijia.com:1111 {
 	reverse_proxy http://115.159.93.223:8888
 }
 
-https://bbs.baobeihuijia.com {
+*.baobeihuijia.com {
+    tls {
+        dns dnspod 307575,dec11869aee1bada71d4bac33f9b750c
+    }
+
 	log {
 		output file /tmp/caddywaf.log
 	}
@@ -62,7 +66,11 @@ https://bbs.baobeihuijia.com {
 		strategyOrders strategy1 strategy2 strategy3
 	}
 
-	reverse_proxy @not_static http://115.159.93.223:8888
+    handle {
+        @serviceBBS host bbs.baobeihuijia.com
+	    reverse_proxy @serviceBBS http://115.159.93.223:8888
+    }
+
 	root * /srv/www
 	file_server
 }
@@ -135,17 +143,6 @@ https://airdb.net {
 		path /favicon.ico
 	}
 
-	#handle /robots.txt {
-	#	root * /srv/www
-	#	file_server
-	#}
-
-	#handle /favicon.ico {
-	#	root * /srv/www
-	#	file_server
-	#}
-	#root /robots.txt /srv/www
-	#file_server
 
 	handle @static {
 		root * /srv/www
@@ -169,4 +166,22 @@ https://airdb.net {
 
 	root * /srv/www
 	file_server
+}
+
+*.airdb.dev {
+    tls {
+        #dns dnspod {env.DNSPOD_TOKEN}
+        dns dnspod 307575,dec11869aee1bada71d4bac33f9b750c
+    }
+
+    handle {
+        @serviceSSO host sso.airdb.dev
+        reverse_proxy @serviceSSO http://127.0.0.1:8000
+
+        @serviceBBS host bbs.airdb.dev
+        reverse_proxy @serviceBBS http://127.0.0.1:7000
+    }
+
+	#root * /srv/www
+	#file_server
 }
