@@ -157,6 +157,9 @@ https://airdb.net {
 		@serviceSSO host sso.airdb.net
 		reverse_proxy @serviceSSO http://127.0.0.1:8000
 
+        @serviceBBS host bbs.airdb.net
+        reverse_proxy @serviceBBS http://127.0.0.1:7000
+
 		@serviceID host id.airdb.net
 		reverse_proxy @serviceID http://127.0.0.1:8000
 
