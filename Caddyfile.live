@@ -166,8 +166,10 @@ https://airdb.net {
 		reverse_proxy @serviceB http://115.159.93.223:8888
 	}
 
-	root * /srv/www
+	root * /home/ubuntu/go/src/github.com/airdb/airdb.net/public
 	file_server
+	#root * /srv/www
+	#file_server
 }
 
 *.airdb.dev {
