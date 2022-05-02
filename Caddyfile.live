@@ -40,9 +40,9 @@ http://bbs.baobeihuijia.com:1111 {
 }
 
 *.baobeihuijia.com {
-    tls {
-        dns dnspod 307575,dec11869aee1bada71d4bac33f9b750c
-    }
+	tls {
+		dns dnspod 307575,dec11869aee1bada71d4bac33f9b750c
+	}
 
 	log {
 		output file /tmp/caddywaf.log
@@ -66,10 +66,10 @@ http://bbs.baobeihuijia.com:1111 {
 		strategyOrders strategy1 strategy2 strategy3
 	}
 
-    handle {
-        @serviceBBS host bbs.baobeihuijia.com
-	    reverse_proxy @serviceBBS http://115.159.93.223:8888
-    }
+	handle {
+		@serviceBBS host bbs.baobeihuijia.com
+		reverse_proxy @serviceBBS http://115.159.93.223:8888
+	}
 
 	root * /srv/www
 	file_server
@@ -83,8 +83,8 @@ https://airdb.net {
 
 	header /* {
 		-Server
-        X-content-type-tptions nosniff
-        X-frame-options DENY
+		X-content-type-tptions nosniff
+		X-frame-options DENY
 		Access-Control-Allow-Origin *
 		Access-Control-Allow-Credentials true
 		Access-Control-Allow-Methods *
@@ -143,7 +143,6 @@ https://airdb.net {
 		path /favicon.ico
 	}
 
-
 	handle @static {
 		root * /srv/www
 		file_server
@@ -157,8 +156,8 @@ https://airdb.net {
 		@serviceSSO host sso.airdb.net
 		reverse_proxy @serviceSSO http://127.0.0.1:8000
 
-        @serviceBBS host bbs.airdb.net
-        reverse_proxy @serviceBBS http://127.0.0.1:7000
+		@serviceBBS host bbs.airdb.net
+		reverse_proxy @serviceBBS http://127.0.0.1:7000
 
 		@serviceID host id.airdb.net
 		reverse_proxy @serviceID http://127.0.0.1:8000
@@ -172,18 +171,21 @@ https://airdb.net {
 }
 
 *.airdb.dev {
-    tls {
-        #dns dnspod {env.DNSPOD_TOKEN}
-        dns dnspod 307575,dec11869aee1bada71d4bac33f9b750c
-    }
+	tls {
+		#dns dnspod {env.DNSPOD_TOKEN}
+		dns dnspod 307575,dec11869aee1bada71d4bac33f9b750c
+	}
 
-    handle {
-        @serviceSSO host sso.airdb.dev
-        reverse_proxy @serviceSSO http://127.0.0.1:8000
+	handle {
+		@serviceSSO host sso.airdb.dev
+		reverse_proxy @serviceSSO http://127.0.0.1:8000
 
-        @serviceBBS host bbs.airdb.dev
-        reverse_proxy @serviceBBS http://127.0.0.1:7000
-    }
+		@serviceBBS host bbs.airdb.dev
+		reverse_proxy @serviceBBS http://127.0.0.1:7000
+	}
+
+	root * /home/ubuntu/go/src/github.com/airdb/airdb.net/public
+	file_server
 
 	#root * /srv/www
 	#file_server
