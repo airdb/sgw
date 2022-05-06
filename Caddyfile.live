@@ -109,9 +109,8 @@ https://airdb.net {
 		strategyOrders strategy1 strategy2 strategy3
 	}
 
-	reverse_proxy @not_static http://127.0.0.1:8000
-	root * /srv/www
-	file_server
+    root * /home/ubuntu/go/src/github.com/airdb/airdb.net/public
+    file_server
 }
 
 *.airdb.net {
@@ -191,4 +190,23 @@ https://airdb.net {
 
 	#root * /srv/www
 	#file_server
+}
+
+# CN testing domain.
+*.airdb.run {
+    tls {
+        #dns dnspod {env.DNSPOD_TOKEN}
+        dns dnspod 307575,dec11869aee1bada71d4bac33f9b750c
+    }
+
+    handle {
+        @serviceSSO host sso.airdb.run
+        reverse_proxy @serviceSSO http://127.0.0.1:8000
+
+        @serviceBBS host bbs.airdb.run
+        reverse_proxy @serviceBBS http://127.0.0.1:7000
+    }
+
+    root * /home/ubuntu/go/src/github.com/airdb/airdb.net/public
+    file_server
 }
