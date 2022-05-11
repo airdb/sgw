@@ -1,12 +1,13 @@
 dev: build
-	./caddy run -watch -config Caddyfile.dev
+	./caddy run -watch -config Caddyfile
 
 run:
-	./caddy run -watch -config Caddyfile.live
+	./caddy run -watch -config Caddyfile
 
 fmt:
-	./caddy fmt -overwrite ./Caddyfile.dev
-	./caddy fmt -overwrite ./Caddyfile.live
+	./caddy fmt -overwrite ./Caddyfile
+	#./caddy fmt -overwrite ./Caddyfile.dev
+	#./caddy fmt -overwrite ./Caddyfile.live
 
 build:
 	go build -o caddy ./cmd/main.go
