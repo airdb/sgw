@@ -1,0 +1,48 @@
+{
+	debug #access debug log
+	order waf first
+
+	log {
+		level DEBUG
+		format json
+		output file /tmp/caddywaf.log {
+			roll_size 500MiB
+			roll_keep 5
+			roll_keep_for 720h
+		}
+	}
+
+	auto_https off
+}
+
+http://127.0.0.1:8080 {
+	respond /healthz "Im healthy!" 200
+	respond /ok "Im healthy!" 200
+
+	waf {
+		output stdout
+		ipvendor "ipv4_en.ipdb"
+		orders wafModule1 wafModule2 wafModule3
+		strategyOrders strategy1 strategy2 strategy3
+	}
+
+	respond /robots.txt 200 {
+		body "User-agent: *
+		Disallow: /"
+		close
+	}
+}
+
+http://127.0.0.1:8000 {
+	log {
+		output file /tmp/caddywaf.log
+	}
+	respond / "Im healthy!" 200
+
+	respond /hello "Im healthy!" 200
+}
+
+http://127.0.0.1:8001 {
+	root * /tmp/
+	file_server browse
+}
