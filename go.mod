@@ -1,10 +1,10 @@
 module github.com/airdb/caddywaf
 
-go 1.17
+go 1.18
 
 require (
 	github.com/caddy-dns/dnspod v0.0.4
-	github.com/caddyserver/caddy/v2 v2.5.0
+	github.com/caddyserver/caddy/v2 v2.5.1
 	github.com/ipipdotnet/ipdb-go v1.3.1
 	github.com/prometheus/client_golang v1.12.1
 	go.uber.org/zap v1.21.0
