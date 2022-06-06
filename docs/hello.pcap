@@ -1,7 +1,7 @@
 # Ja3 Client Hello
 
 
-## Packet 1
+## Example 1
 Client Support TLSV1.3
 Server Support TLSV1.2 TLSV1.3
 
@@ -154,3 +154,124 @@ Transport Layer Security
 
 ```
 
+
+
+## Example 2
+```
+Frame 2979: 561 bytes on wire (4488 bits), 561 bytes captured (4488 bits) on interface utun3, id 0
+Null/Loopback
+Internet Protocol Version 4, Src: 10.22.76.170, Dst: 143.92.64.129
+Transmission Control Protocol, Src Port: 54224, Dst Port: 443, Seq: 1, Ack: 1, Len: 517
+Transport Layer Security
+    TLSv1.3 Record Layer: Handshake Protocol: Client Hello
+        Content Type: Handshake (22)
+        Version: TLS 1.0 (0x0301)
+        Length: 512
+        Handshake Protocol: Client Hello
+            Handshake Type: Client Hello (1)
+            Length: 508
+            Version: TLS 1.2 (0x0303)
+            Random: 02dce663eafafff923dc305b24661ae60385edfd77a3a0f25330bf0d6cfa9ecb
+            Session ID Length: 32
+            Session ID: 3185b3885323c379e801b98b71f044f991f973de6c80fa8ea6f20947439b7ec9
+            Cipher Suites Length: 62
+            Cipher Suites (31 suites)
+                Cipher Suite: TLS_AES_256_GCM_SHA384 (0x1302)
+                Cipher Suite: TLS_CHACHA20_POLY1305_SHA256 (0x1303)
+                Cipher Suite: TLS_AES_128_GCM_SHA256 (0x1301)
+                Cipher Suite: TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 (0xc02c)
+                Cipher Suite: TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (0xc030)
+                Cipher Suite: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (0x009f)
+                Cipher Suite: TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca9)
+                Cipher Suite: TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xcca8)
+                Cipher Suite: TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256 (0xccaa)
+                Cipher Suite: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 (0xc02b)
+                Cipher Suite: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)
+                Cipher Suite: TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (0x009e)
+                Cipher Suite: TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 (0xc024)
+                Cipher Suite: TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (0xc028)
+                Cipher Suite: TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 (0x006b)
+                Cipher Suite: TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 (0xc023)
+                Cipher Suite: TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (0xc027)
+                Cipher Suite: TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 (0x0067)
+                Cipher Suite: TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA (0xc00a)
+                Cipher Suite: TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (0xc014)
+                Cipher Suite: TLS_DHE_RSA_WITH_AES_256_CBC_SHA (0x0039)
+                Cipher Suite: TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA (0xc009)
+                Cipher Suite: TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (0xc013)
+                Cipher Suite: TLS_DHE_RSA_WITH_AES_128_CBC_SHA (0x0033)
+                Cipher Suite: TLS_RSA_WITH_AES_256_GCM_SHA384 (0x009d)
+                Cipher Suite: TLS_RSA_WITH_AES_128_GCM_SHA256 (0x009c)
+                Cipher Suite: TLS_RSA_WITH_AES_256_CBC_SHA256 (0x003d)
+                Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA256 (0x003c)
+                Cipher Suite: TLS_RSA_WITH_AES_256_CBC_SHA (0x0035)
+                Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA (0x002f)
+                Cipher Suite: TLS_EMPTY_RENEGOTIATION_INFO_SCSV (0x00ff)
+            Compression Methods Length: 1
+            Compression Methods (1 method)
+            Extensions Length: 373
+            Extension: server_name (len=33)
+            Extension: ec_point_formats (len=4)
+                Type: ec_point_formats (11)
+                Length: 4
+                EC point formats Length: 3
+                Elliptic curves point formats (3)
+                    EC point format: uncompressed (0)
+                    EC point format: ansiX962_compressed_prime (1)
+                    EC point format: ansiX962_compressed_char2 (2)
+            Extension: supported_groups (len=12)
+                Type: supported_groups (10)
+                Length: 12
+                Supported Groups List Length: 10
+                Supported Groups (5 groups)
+                    Supported Group: x25519 (0x001d)
+                    Supported Group: secp256r1 (0x0017)
+                    Supported Group: x448 (0x001e)
+                    Supported Group: secp521r1 (0x0019)
+                    Supported Group: secp384r1 (0x0018)
+            Extension: next_protocol_negotiation (len=0)
+                Type: next_protocol_negotiation (13172)
+                Length: 0
+            Extension: application_layer_protocol_negotiation (len=14)
+                Type: application_layer_protocol_negotiation (16)
+                Length: 14
+                ALPN Extension Length: 12
+                ALPN Protocol
+            Extension: encrypt_then_mac (len=0)
+                Type: encrypt_then_mac (22)
+                Length: 0
+            Extension: extended_master_secret (len=0)
+                Type: extended_master_secret (23)
+                Length: 0
+            Extension: post_handshake_auth (len=0)
+                Type: post_handshake_auth (49)
+                Length: 0
+            Extension: signature_algorithms (len=48)
+                Type: signature_algorithms (13)
+                Length: 48
+                Signature Hash Algorithms Length: 46
+                Signature Hash Algorithms (23 algorithms)
+            Extension: supported_versions (len=9)
+                Type: supported_versions (43)
+                Length: 9
+                Supported Versions length: 8
+                Supported Version: TLS 1.3 (0x0304)
+                Supported Version: TLS 1.2 (0x0303)
+                Supported Version: TLS 1.1 (0x0302)
+                Supported Version: TLS 1.0 (0x0301)
+            Extension: psk_key_exchange_modes (len=2)
+                Type: psk_key_exchange_modes (45)
+                Length: 2
+                PSK Key Exchange Modes Length: 1
+                PSK Key Exchange Mode: PSK with (EC)DHE key establishment (psk_dhe_ke) (1)
+            Extension: key_share (len=38)
+                Type: key_share (51)
+                Length: 38
+                Key Share extension
+            Extension: padding (len=161)
+                Type: padding (21)
+                Length: 161
+                Padding Data: 000000000000000000000000000000000000000000000000000000000000000000000000…
+            [JA3 Fullstring: 771,4866-4867-4865-49196-49200-159-52393-52392-52394-49195-49199-158-49188-49192-107-49187-49191-103-49162-49172-57-49161-49171-51-157-156-61-60-53-47-255,0-11-10-13172-16-22-23-49-13-43-45-51-21,29-23-30-25-24,0-1-2]
+            [JA3: f436b9416f37d134cadd04886327d3e8]
+```
