@@ -1,5 +1,5 @@
 dev: build
-	./caddy run -watch -config Caddyfile
+	go run cmd/main.go run -watch -config Caddyfile
 
 run:
 	./caddy run -watch -config Caddyfile

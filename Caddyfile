@@ -13,6 +13,9 @@
 	}
 
 	auto_https off
+	storage file_system {
+		root /opt/caddy/ssl/
+	}
 }
 
 http://127.0.0.1:8080 {
@@ -21,7 +24,7 @@ http://127.0.0.1:8080 {
 
 	waf {
 		output stdout
-		ipvendor "ipv4_en.ipdb"
+		ipvendor "/opt/caddy/ipv4_en.ipdb"
 		orders wafModule1 wafModule2 wafModule3
 		strategyOrders strategy1 strategy2 strategy3
 	}
