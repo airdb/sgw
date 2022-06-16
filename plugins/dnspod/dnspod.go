@@ -1,23 +1,32 @@
 package dnspod
 
 import (
+	"os"
+
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
-	dnspod "github.com/libdns/dnspod"
+	"go.uber.org/zap"
+	// dnspod "github.com/libdns/dnspod"
 )
 
 // Provider wraps the provider implementation as a Caddy module.
-type Provider struct{ *dnspod.Provider }
+type Provider struct{ *DNSProvider }
+
+const ModuleName = "dnspod"
+
+var log *zap.Logger
 
 func init() {
 	caddy.RegisterModule(Provider{})
+	log = caddy.Log().Named(ModuleName)
+
 }
 
 // CaddyModule returns the Caddy module information.
 func (Provider) CaddyModule() caddy.ModuleInfo {
 	return caddy.ModuleInfo{
 		ID:  "dns.providers.dnspod",
-		New: func() caddy.Module { return &Provider{new(dnspod.Provider)} },
+		New: func() caddy.Module { return &Provider{new(DNSProvider)} },
 	}
 }
 
@@ -25,7 +34,7 @@ func (Provider) CaddyModule() caddy.ModuleInfo {
 // Implements caddy.Provisioner.
 func (p *Provider) Provision(ctx caddy.Context) error {
 	repl := caddy.NewReplacer()
-	p.Provider.APIToken = repl.ReplaceAll(p.Provider.APIToken, "")
+	p.DNSProvider.APIToken = repl.ReplaceAll(p.DNSProvider.APIToken, "")
 	return nil
 }
 
@@ -36,20 +45,27 @@ func (p *Provider) Provision(ctx caddy.Context) error {
 // }
 //
 func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+	token, exist := os.LookupEnv("DNSPOD_TOKEN")
+	if exist {
+		p.DNSProvider.APIToken = token
+	}
+
+	log.Info("get token", zap.String("token", p.DNSProvider.APIToken))
 	for d.Next() {
 		if d.NextArg() {
-			p.Provider.APIToken = d.Val()
+			p.DNSProvider.APIToken = d.Val()
 		}
 		if d.NextArg() {
 			return d.ArgErr()
 		}
+
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
 			case "api_token":
-				if p.Provider.APIToken != "" {
+				if p.DNSProvider.APIToken != "" {
 					return d.Err("API token already set")
 				}
-				p.Provider.APIToken = d.Val()
+				p.DNSProvider.APIToken = d.Val()
 				if d.NextArg() {
 					return d.ArgErr()
 				}
@@ -58,7 +74,7 @@ func (p *Provider) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			}
 		}
 	}
-	if p.Provider.APIToken == "" {
+	if p.DNSProvider.APIToken == "" {
 		return d.Err("missing API token")
 	}
 	return nil

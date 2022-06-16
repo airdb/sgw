@@ -2,3 +2,5 @@
 ipv4_en.ipdb
 caddy
 __debug_bin
+Caddyfile.d/
+.vscode/

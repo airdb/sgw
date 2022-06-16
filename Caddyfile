@@ -13,6 +13,7 @@
 	}
 
 	auto_https off
+	email tech@airdb.net
 	storage file_system {
 		root /opt/caddy/ssl/
 	}
