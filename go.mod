@@ -3,9 +3,9 @@ module github.com/airdb/caddywaf
 go 1.18
 
 require (
-	github.com/caddy-dns/dnspod v0.0.4
 	github.com/caddyserver/caddy/v2 v2.5.1
 	github.com/ipipdotnet/ipdb-go v1.3.1
+	github.com/libdns/dnspod v0.0.3
 	github.com/prometheus/client_golang v1.12.1
 	go.uber.org/zap v1.21.0
 )
@@ -60,7 +60,6 @@ require (
 	github.com/jackc/pgx/v4 v4.14.0 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
-	github.com/libdns/dnspod v0.0.3 // indirect
 	github.com/libdns/libdns v0.2.1 // indirect
 	github.com/lucas-clemente/quic-go v0.26.0 // indirect
 	github.com/manifoldco/promptui v0.9.0 // indirect
