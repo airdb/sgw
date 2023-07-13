@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"os"
 
@@ -66,7 +65,9 @@ func (m *Middleware) Provision(ctx caddy.Context) error {
 // Validate implements caddy.Validator.
 func (m *Middleware) Validate() error {
 	// init ip info.
-	checker.NewIPIP(args.IPVendor)
+	if args.IPVendor != "" {
+		checker.NewIPIP(args.IPVendor)
+	}
 
 	if m.w == nil {
 		return fmt.Errorf("no writer")
@@ -79,27 +80,29 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 	w.Header().Set("X-Airdb-Server", "airdb-gateway")
 	w.Header().Set("X-Airdb-Uid", "1234567890")
 	w.Header().Set("X-Airdb-Rid", "BFC4CD12-265E-4305-941E-847DE6727D91")
-	cip, _, _ := net.SplitHostPort(r.RemoteAddr)
-
-	check := checker.IPIP.CheckIP(cip)
-	actionMsg := ""
+	// cip, _, _ := net.SplitHostPort(r.RemoteAddr)
 	ua := r.Header.Get("user-agent")
+	actionMsg := ""
 
-	actionMsg = checker.ActionWatchMsg
-	log.Info(actionMsg, zap.String("Sec-Ch-Ua-Platform", r.Header.Get("Sec-Ch-Ua-Platform")), zap.String("ua", ua))
-	log.Info(actionMsg, zap.String("cip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
+	/*
+		check := checker.IPIP.CheckIP(cip)
 
-	if check {
+		actionMsg = checker.ActionWatchMsg
+		log.Info(actionMsg, zap.String("Sec-Ch-Ua-Platform", r.Header.Get("Sec-Ch-Ua-Platform")), zap.String("ua", ua))
+		log.Info(actionMsg, zap.String("cip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
+
 		if check {
-			w.Write([]byte("server error 500\n"))
-			actionMsg = checker.BlockByIPIDC
-			w.Header().Set("X-Airdb-Action", actionMsg)
-			log.Info(actionMsg, zap.String("ip", cip), zap.String("uri", r.RequestURI))
-			return errors.New("500")
+			if check {
+				w.Write([]byte("server error 500\n"))
+				actionMsg = checker.BlockByIPIDC
+				w.Header().Set("X-Airdb-Action", actionMsg)
+				log.Info(actionMsg, zap.String("ip", cip), zap.String("uri", r.RequestURI))
+				return errors.New("500")
+			}
 		}
-	}
+	*/
 
-	check = checker.CheckUserAgent(ua)
+	check := checker.CheckUserAgent(ua)
 	if check {
 		actionMsg = checker.BlockByUA
 		w.Header().Set("X-Airdb-Action", actionMsg)
@@ -116,8 +119,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
 // UnmarshalCaddyfile implements caddyfile.Unmarshaler, Syntax:
 //
-//     waf <name> [<option>]
-//
+//	waf <name> [<option>]
 func (m *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
 		for nesting := d.Nesting(); d.NextBlock(nesting); {

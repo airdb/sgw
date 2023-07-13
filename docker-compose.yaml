@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  sgw:
+    container_name: sgw
+    restart: always
+    image: 'airdb/sgw:latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080/tcp"
+    volumes:
+      - ./Caddyfile:/app/Caddyfile:ro
