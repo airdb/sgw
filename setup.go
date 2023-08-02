@@ -1,7 +1,6 @@
 package caddywaf
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -77,43 +76,10 @@ func (m *Middleware) Validate() error {
 
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-	fmt.Println("waf middleware", m.Orders)
-	w.Header().Set("X-Airdb-Server", "airdb-gateway")
-	w.Header().Set("X-Airdb-Uid", "1234567890")
-	w.Header().Set("X-Airdb-Rid", "BFC4CD12-265E-4305-941E-847DE6727D91")
-	// cip, _, _ := net.SplitHostPort(r.RemoteAddr)
-	ua := r.Header.Get("user-agent")
-	actionMsg := ""
-
-	/*
-		check := checker.IPIP.CheckIP(cip)
-
-		actionMsg = checker.ActionWatchMsg
-		log.Info(actionMsg, zap.String("Sec-Ch-Ua-Platform", r.Header.Get("Sec-Ch-Ua-Platform")), zap.String("ua", ua))
-		log.Info(actionMsg, zap.String("cip", cip), zap.Bool("is_idc", check), zap.String("ip", r.RequestURI))
-
-		if check {
-			if check {
-				w.Write([]byte("server error 500\n"))
-				actionMsg = checker.BlockByIPIDC
-				w.Header().Set("X-Airdb-Action", actionMsg)
-				log.Info(actionMsg, zap.String("ip", cip), zap.String("uri", r.RequestURI))
-				return errors.New("500")
-			}
-		}
-	*/
-
-	check := checker.CheckUserAgent(ua)
-	if check {
-		actionMsg = checker.BlockByUA
-		w.Header().Set("X-Airdb-Action", actionMsg)
-		w.Write([]byte("server error 500\n"))
-		log.Info(actionMsg, zap.String("ua", ua), zap.String("uri", r.RequestURI))
-		return errors.New("500")
+	err := checker.RunSecCheck(w, r)
+	if err != nil {
+		fmt.Println("run security check middleware failed", err)
 	}
-
-	w.Header().Add("X-Airdb-Action", actionMsg)
-	// w.Write([]byte("waf check pass\n"))
 
 	return next.ServeHTTP(w, r)
 }
