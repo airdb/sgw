@@ -15,6 +15,12 @@ type SecureInfo struct {
 }
 
 type GeneralHeader struct {
+	Host          string `json:"host"`
+	Method        string `json:"method"`
+	StatusCode    int    `json:"status_code"`
+	ContentType   string `json:"content-type"`
+	ContentLength int    `json:"content-length"`
+
 	Scheme                  string `json:"scheme"`
 	Protocol                string `json:"protocol"`
 	RemoteAddr              string `json:"remote_addr"`
@@ -56,12 +62,6 @@ type IPInfo struct {
 }
 
 type CommonHeader struct {
-	Host          string `json:"host"`
-	Method        string `json:"method"`
-	StatusCode    int    `json:"status_code"`
-	ContentType   string `json:"content-type"`
-	ContentLength int    `json:"content-length"`
-
 	UserAgent      string `json:"user-agent"`
 	Connection     string `json:"connection"`
 	Referer        string `json:"referer"`

@@ -51,14 +51,6 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 		info.IPInfo.UsageType = "DCH"
 	}
 
-	info.RequestHeader.CommonHeader.Host = r.Host
-	info.RequestHeader.CommonHeader.Method = r.Method
-
-	contentLength, err := strconv.Atoi(r.Header.Get("Content-Length"))
-	if err == nil {
-		info.RequestHeader.CommonHeader.ContentLength = contentLength
-	}
-
 	// Handle commmon request header.
 	for k, v := range r.Header {
 		switch k {
@@ -93,10 +85,17 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
-	info.RequestHeader.CommonHeader.ContentType = r.Header.Get("Content-Type")
+	info.RequestHeader.GeneralHeader.ContentType = r.Header.Get("Content-Type")
 
 	info.RequestHeader.GeneralHeader.Protocol = r.Proto
 	info.RequestHeader.GeneralHeader.RemoteAddr = r.RemoteAddr
+	info.RequestHeader.GeneralHeader.Host = r.Host
+	info.RequestHeader.GeneralHeader.Method = r.Method
+
+	contentLength, err := strconv.Atoi(r.Header.Get("Content-Length"))
+	if err == nil {
+		info.RequestHeader.GeneralHeader.ContentLength = contentLength
+	}
 
 	if r.TLS == nil {
 		info.RequestHeader.GeneralHeader.Scheme = "HTTP"
