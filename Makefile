@@ -40,8 +40,12 @@ start: ## Create and start containers
 stop: ## Stop containers
 	docker compose stop
 
-logs: ## Check logs
+log logs: ## Check logs
 	docker compose logs ${SERVICE}
+
+logf: ## Check logs
+	docker compose logs -f ${SERVICE}
+
 
 bash: ## Execute a command in a running container
 	docker compose exec ${SERVICE} /bin/sh

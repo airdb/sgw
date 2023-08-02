@@ -79,6 +79,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 	err := checker.RunSecCheck(w, r)
 	if err != nil {
 		fmt.Println("run security check middleware failed", err)
+		return nil
 	}
 
 	return next.ServeHTTP(w, r)

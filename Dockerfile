@@ -1,4 +1,5 @@
-FROM airdb/builder:xcaddy as builder
+#FROM airdb/builder:xcaddy as builder
+FROM golang:1.20-alpine as builder
 
 WORKDIR /build
 
