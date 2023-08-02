@@ -8,6 +8,7 @@ type SecureInfo struct {
 	ResponseHeader ResponseHeader `json:"response_header"`
 	ResponseBody   ResponseBody   `json:"response_body"`
 	IPInfo         IPInfo         `json:"ip_info"`
+	SecureAction   SecureAction   `json:"secure_action"`
 }
 
 type GeneralHeader struct{}
@@ -26,8 +27,22 @@ type ResponseHeader struct {
 
 type ResponseBody struct{}
 
-type IPInfo struct{}
+type SecureAction struct {
+	Strategy string `json:"strategy"`
+	Action   string `json:"action"`
+}
 
+type IPInfo struct {
+	IP        string `json:"ip"`
+	ISP       string `json:"isp"`
+	UsageType string `json:"usage_type"`
+	Region    string `json:"region"`
+	City      string `json:"city"`
+	Longitude string `json:"longitude"`
+	Latitude  string `json:"latitude"`
+}
+
+// Custom header.
 type GatewayCustomHeader struct {
 	XSgwServer string `json:"X-Sgw-Server"` // Server name
 	XSgwRid    string `json:"X-Sgw-Rid"`    // Request ID

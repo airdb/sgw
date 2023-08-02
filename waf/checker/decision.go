@@ -2,6 +2,7 @@ package checker
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 
 	"github.com/airdb/caddywaf/waf/model"
@@ -41,7 +42,20 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Add("X-Sgw-Uid", "uid-test")
 	w.Header().Add("X-Sgw-Action", "pass")
 
-	// cip, _, _ := net.SplitHostPort(r.RemoteAddr)
+	cip, _, _ := net.SplitHostPort(r.RemoteAddr)
+	var info model.SecureInfo
+	info.IPInfo.IP = cip
+
+	dbmap, _ := IPIP.DB.FindMap(cip, IPIPEN)
+	info.IPInfo.ISP = dbmap["isp"]
+	info.IPInfo.UsageType = ""
+
+	if dbmap["idc"] == "IDC" {
+		info.IPInfo.UsageType = "DCH"
+	}
+
+	fmt.Printf("secure info: %+v\n", info)
+
 	// ua := r.Header.Get("user-agent")
 
 	/*
