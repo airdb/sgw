@@ -1,7 +1,8 @@
 # secret
-ipv4_en.ipdb
 caddy
 __debug_bin
 Caddyfile.d/
 .vscode/
 .DS_Store
+
+conf

@@ -4,11 +4,12 @@ services:
   sgw:
     container_name: sgw
     restart: always
-    image: 'airdb/sgw:latest'
+    image: 'airdb/sgw:dev'
+    #command: sleep 300
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080/tcp"
     volumes:
-      - ./Caddyfile:/app/Caddyfile:ro
+      - ./conf/:/app/conf

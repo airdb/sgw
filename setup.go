@@ -77,6 +77,7 @@ func (m *Middleware) Validate() error {
 
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
+	fmt.Println("waf middleware", m.Orders)
 	w.Header().Set("X-Airdb-Server", "airdb-gateway")
 	w.Header().Set("X-Airdb-Uid", "1234567890")
 	w.Header().Set("X-Airdb-Rid", "BFC4CD12-265E-4305-941E-847DE6727D91")
