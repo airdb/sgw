@@ -3,14 +3,15 @@ package model
 import "net/http"
 
 type ResponseHeader struct {
-	AddHeaders http.Header `json:"add_headers,omitempty"`
-	DelHeaders []string    `json:"del_headers,omitempty"`
+	AddHeaders http.Header  `json:"add_headers,omitempty"`
+	DelHeaders http.Handler `json:"del_headers,omitempty"`
 }
+
 type RequestHeader struct {
 	GeneralHeader GeneralHeader `json:"general_header"`
 	ForwardHeader ForwardHeader `json:"forward_header,omitempty"`
 	CommonHeader  CommonHeader  `json:"common_header"`
-	CustomHeader  CustomHeader  `json:"gateway_custom_header"`
+	CustomHeader  CustomHeader  `json:"custom_header"`
 }
 
 type GeneralHeader struct {
