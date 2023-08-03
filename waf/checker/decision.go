@@ -17,14 +17,6 @@ import (
 // Scroe is range from 0 to 100.
 var CreditScore uint
 
-const (
-	BlockByIP      = "block by IP"
-	BlockByIPIDC   = "block by IP IDC"
-	BlockByUA      = "block by UA"
-	BlockByURI     = "block by URI"
-	ActionWatchMsg = "watch"
-)
-
 func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 	var err error
 
@@ -111,7 +103,8 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 		info.RequestHeader.GeneralHeader.Scheme = "HTTPS"
 
 		// refer: https://github.com/caddyserver/caddy/issues/4504
-		info.RequestHeader.GatewayCustomHeader.XJA3Fingerprint = "771,4567-458-459,0-1-2,0,0"
+		info.RequestHeader.CustomHeader.XJA3Fingerprint = "771,4567-458-459,0-1-2,0,0"
+		info.RequestHeader.CustomHeader.XHTTP2Fingerprint = "xxxxx"
 	}
 
 	info.RequestHeader.GeneralHeader.Host = r.Host
@@ -157,7 +150,7 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 
 	// log.Info("waf check pass", zap.String("request_id", requestID), zap.String("uri", r.RequestURI))
 
-	info.TimeCost = time.Since(start)
+	info.TimeCost = time.Since(start).Milliseconds()
 	data, err := json.Marshal(info)
 	if err != nil {
 		return err
