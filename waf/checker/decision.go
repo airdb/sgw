@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/airdb/caddywaf/waf/model"
@@ -16,7 +17,6 @@ import (
 // Scroe is range from 0 to 100.
 var CreditScore uint
 
-// Block Message.
 const (
 	BlockByIP      = "block by IP"
 	BlockByIPIDC   = "block by IP IDC"
@@ -30,7 +30,9 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 
 	var info model.SecureInfo
 	start := time.Now()
-	info.Timestamp = start.UnixNano()
+
+	// info.Timestamp = // start.UnixNano()
+	info.Timestamp = float64(start.UnixMicro()) / 1000000
 
 	// fmt.Println("waf middleware", m.Orders)
 	w.Header().Set("Server", "secure-gateway")
@@ -41,15 +43,23 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Add("X-Sgw-Action", "pass")
 
 	cip, _, _ := net.SplitHostPort(r.RemoteAddr)
+
 	info.IPInfo.IP = cip
 
 	dbmap, _ := IPIP.DB.FindMap(cip, IPIPEN)
-	info.IPInfo.ISP = dbmap["isp"]
-	info.IPInfo.UsageType = ""
+	fmt.Println("dbmap", dbmap["idc"])
 
-	if dbmap["idc"] == "IDC" {
+	info.IPInfo.UsageType = ""
+	if dbmap["idc"] == "IDC" || dbmap["idc"] == "VPN" {
 		info.IPInfo.UsageType = "DCH"
 	}
+
+	info.IPInfo.Region = dbmap["region_name"]
+	info.IPInfo.ISP = dbmap["isp_domain"]
+	info.IPInfo.Domain = dbmap["owner_domain"]
+	info.IPInfo.City = dbmap["city_name"]
+	info.IPInfo.Latitude = dbmap["latitude"]
+	info.IPInfo.Longitude = dbmap["longitude"]
 
 	// Handle commmon request header.
 	for k, v := range r.Header {
@@ -67,7 +77,7 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 		case "Sec-Ch-Ua-Mobile":
 			info.RequestHeader.CommonHeader.SecChUaMobile = v[0]
 		case "Sec-Ch-Ua-Platform":
-			info.RequestHeader.CommonHeader.SecChUaPlatform = v[0]
+			info.RequestHeader.CommonHeader.SecChUaPlatform = strings.Trim(v[0], "\"")
 		case "User-Agent":
 			info.RequestHeader.CommonHeader.UserAgent = v[0]
 		case "Accept":
@@ -89,8 +99,6 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 
 	info.RequestHeader.GeneralHeader.Protocol = r.Proto
 	info.RequestHeader.GeneralHeader.RemoteAddr = r.RemoteAddr
-	info.RequestHeader.GeneralHeader.Host = r.Host
-	info.RequestHeader.GeneralHeader.Method = r.Method
 
 	contentLength, err := strconv.Atoi(r.Header.Get("Content-Length"))
 	if err == nil {
@@ -103,10 +111,14 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 		info.RequestHeader.GeneralHeader.Scheme = "HTTPS"
 
 		// refer: https://github.com/caddyserver/caddy/issues/4504
-		info.RequestHeader.GeneralHeader.TLSFingerprint = "771,4567-458-459,0-1-2,0,0"
+		info.RequestHeader.GatewayCustomHeader.XJA3Fingerprint = "771,4567-458-459,0-1-2,0,0"
 	}
 
-	info.RequestArgs.QueryArgs = r.URL.RawQuery
+	info.RequestHeader.GeneralHeader.Host = r.Host
+	info.RequestHeader.GeneralHeader.Endpoint = r.URL.Path
+	info.RequestHeader.GeneralHeader.QueryPair = r.URL.RawQuery
+
+	info.RequestHeader.GeneralHeader.Method = r.Method
 
 	/* Construct response header. */
 	respHeader := make(map[string]string)
