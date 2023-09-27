@@ -17,6 +17,9 @@ const (
 	IPNULL = ""
 )
 
+// https://github.com/porech/caddy-maxmind-geolocation
+// https://github.com/mholt/caddy-ratelimit
+
 type Ipip struct {
 	DB *ipdb.City
 }
