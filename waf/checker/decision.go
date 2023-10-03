@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/airdb/caddywaf/waf/model"
+	"github.com/airdb/sgw/waf/model"
 	"github.com/google/uuid"
 )
 

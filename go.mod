@@ -1,4 +1,4 @@
-module github.com/airdb/caddywaf
+module github.com/airdb/sgw
 
 go 1.21
 

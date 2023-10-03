@@ -1,4 +1,4 @@
-package caddywaf_test
+package sgw_test
 
 import (
 	"testing"

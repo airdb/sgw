@@ -1,4 +1,4 @@
-package caddywaf
+package sgw
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/airdb/caddywaf/waf/checker"
+	"github.com/airdb/sgw/waf/checker"
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
@@ -38,7 +38,7 @@ type Middleware struct {
 
 var args Middleware
 
-const ModuleName = "caddywaf"
+const ModuleName = "sgw"
 
 // CaddyModule returns the Caddy module information.
 func (Middleware) CaddyModule() caddy.ModuleInfo {

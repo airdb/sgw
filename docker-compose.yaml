@@ -1,10 +1,10 @@
-version: '3.3'
+version: "3.8"
 
 services:
   sgw:
     container_name: sgw
     restart: always
-    image: 'airdb/sgw:dev'
+    image: "airdb/sgw:dev"
     #command: sleep 300
     build:
       context: .
