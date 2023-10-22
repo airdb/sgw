@@ -5,6 +5,8 @@ go 1.21
 require (
 	github.com/caddyserver/caddy/v2 v2.7.4
 	github.com/google/uuid v1.3.1
+	github.com/ip2location/ip2location-go/v9 v9.6.0
+	github.com/ip2location/ip2proxy-go/v4 v4.0.1
 	github.com/ipipdotnet/ipdb-go v1.3.3
 	github.com/libdns/libdns v0.2.1
 	github.com/nrdcg/dnspod-go v0.4.0
@@ -71,7 +73,7 @@ require (
 	github.com/manifoldco/promptui v0.9.0 // indirect
 	github.com/mastercactapus/proxyprotocol v0.0.4 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
-	github.com/mattn/go-isatty v0.0.16 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
 	github.com/mholt/acmez v1.2.0 // indirect
@@ -146,4 +148,5 @@ require (
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v1.0.0 // indirect
+	lukechampine.com/uint128 v1.2.0 // indirect
 )

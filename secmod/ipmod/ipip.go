@@ -1,4 +1,4 @@
-package checker
+package ipmod
 
 import (
 	"net"
@@ -26,10 +26,10 @@ type Ipip struct {
 
 var IPIP Ipip
 
-func NewIPIP(ipVendor string) {
+func NewIPIP(file string) {
 	var err error
 
-	IPIP.DB, err = ipdb.NewCity(ipVendor)
+	IPIP.DB, err = ipdb.NewCity(file)
 	if err != nil {
 		panic(err)
 	}
