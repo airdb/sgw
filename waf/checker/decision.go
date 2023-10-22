@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/airdb/caddywaf/waf/model"
+	"github.com/airdb/sgw/waf/model"
 	"github.com/google/uuid"
 )
 
@@ -38,20 +38,22 @@ func RunSecCheck(w http.ResponseWriter, r *http.Request) error {
 
 	info.IPInfo.IP = cip
 
-	dbmap, _ := IPIP.DB.FindMap(cip, IPIPEN)
-	fmt.Println("dbmap", dbmap["idc"])
+	/*
+		dbmap, _ := IPIP.DB.FindMap(cip, IPIPEN)
+		fmt.Println("dbmap", dbmap["idc"])
 
-	info.IPInfo.UsageType = ""
-	if dbmap["idc"] == "IDC" || dbmap["idc"] == "VPN" {
-		info.IPInfo.UsageType = "DCH"
-	}
+		info.IPInfo.UsageType = ""
+		if dbmap["idc"] == "IDC" || dbmap["idc"] == "VPN" {
+			info.IPInfo.UsageType = "DCH"
+		}
 
-	info.IPInfo.Region = dbmap["region_name"]
-	info.IPInfo.ISP = dbmap["isp_domain"]
-	info.IPInfo.Domain = dbmap["owner_domain"]
-	info.IPInfo.City = dbmap["city_name"]
-	info.IPInfo.Latitude = dbmap["latitude"]
-	info.IPInfo.Longitude = dbmap["longitude"]
+		info.IPInfo.Region = dbmap["region_name"]
+		info.IPInfo.ISP = dbmap["isp_domain"]
+		info.IPInfo.Domain = dbmap["owner_domain"]
+		info.IPInfo.City = dbmap["city_name"]
+		info.IPInfo.Latitude = dbmap["latitude"]
+		info.IPInfo.Longitude = dbmap["longitude"]
+	*/
 
 	// Handle commmon request header.
 	for k, v := range r.Header {

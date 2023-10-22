@@ -1,5 +1,5 @@
 #FROM airdb/builder:xcaddy as builder
-FROM golang:1.20-alpine as builder
+FROM airdb/builder:alpine-go1.21 as builder
 
 WORKDIR /build
 
@@ -22,4 +22,4 @@ RUN chmod +x /app/caddy
 
 #ENTRYPOINT ["sleep", "3600"]
 #ENTRYPOINT ["/app/caddy", "run"]
-CMD ["/app/caddy", "run", "--config", "conf/Caddyfile"]
+CMD ["/app/caddy", "run", "--watch", "--config", "conf/Caddyfile"]
